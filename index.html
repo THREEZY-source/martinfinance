@@ -6,27 +6,71 @@
 <title>MartinFinance - Sistem Pencatatan Pinjaman</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg-primary: #0d0f0e;
-    --bg-secondary: #131614;
-    --bg-card: #181b19;
-    --bg-elevated: #1e2220;
-    --border: #2a2e2c;
-    --border-accent: #3a4040;
-    --accent: #4ade80;
-    --accent-dim: #22c55e;
-    --accent-muted: #166534;
-    --danger: #f87171;
-    --danger-muted: #7f1d1d;
-    --warning: #fbbf24;
-    --warning-muted: #78350f;
-    --text-primary: #e8ede9;
-    --text-secondary: #8a9490;
-    --text-muted: #4d5753;
-    --font-mono: 'IBM Plex Mono', monospace;
-    --font-sans: 'IBM Plex Sans', sans-serif;
-    --radius: 4px;
-    --transition: 150ms ease;
+:root {
+  --bg-primary: #0d0f0e;
+  --bg-secondary: #131614;
+  --bg-card: #181b19;
+  --bg-elevated: #1e2220;
+  --border: #2a2e2c;
+  --border-accent: #3a4040;
+  --accent: #4ade80;
+  --accent-dim: #22c55e;
+  --accent-muted: #166534;
+  --danger: #f87171;
+  --danger-muted: #7f1d1d;
+  --warning: #fbbf24;
+  --warning-muted: #78350f;
+  --text-primary: #e8ede9;
+  --text-secondary: #8a9490;
+  --text-muted: #4d5753;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --font-sans: 'IBM Plex Sans', sans-serif;
+  --radius: 4px;
+  --transition: 150ms ease;
+}
+
+.menu-toggle {
+  display: none;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 6px 10px;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+
+@media (max-width: 768px) {
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .sidebar {
+    position: fixed;
+    left: -100%;
+    top: 60px;
+    width: 220px;
+    height: calc(100vh - 60px);
+    z-index: 999;
+    transition: 0.3s;
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+}
+
+  .sidebar.open {
+    left: 0;
+  }
+}
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -754,12 +798,27 @@
   .confirm-actions { display: flex; gap: 8px; justify-content: center; }
 
   /* RESPONSIVE */
-  @media (max-width: 768px) {
-    .sidebar { display: none; }
-    .form-grid { grid-template-columns: 1fr; }
-    .stats-grid { grid-template-columns: 1fr 1fr; }
-    .main { padding: 16px; }
+@media (max-width: 768px) {
+
+  .menu-toggle {
+    display: block;
   }
+
+  .sidebar {
+    position: fixed;
+    left: -100%;
+    top: 60px;
+    width: 220px;
+    height: calc(100vh - 60px);
+    z-index: 999;
+    transition: 0.3s;
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+}
 
   /* DIVIDER */
   .divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
@@ -827,15 +886,16 @@
 
 <!-- HEADER -->
 <header class="header">
-  <div class="header-brand">
-    <div class="brand-icon">MF</div>
-    <span class="brand-name">Martin Finance</span>
-    <span class="brand-version">v1.0</span>
-  </div>
-  <div class="header-meta">
-    <span class="ip-badge" id="ipDisplay">&#9679; Memuat IP...</span>
-    <span class="clock" id="clockDisplay"></span>
-  </div>
+<div class="header-brand">
+
+  <!-- 🔥 TAMBAHKAN INI -->
+  <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+
+  <div class="brand-icon">MF</div>
+  <span class="brand-name">Martin Finance</span>
+  <span class="brand-version">v1.0</span>
+
+</div>
 </header>
 
 <!-- LAYOUT -->
@@ -1181,6 +1241,11 @@ function generateId(prefix) {
   return prefix + '-' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2,5).toUpperCase();
 }
 
+function toggleSidebar() {
+  const sidebar = document.querySelector('.sidebar');
+  sidebar.classList.toggle('open');
+}
+
 // ==============================
 // UTILITIES
 // ==============================
@@ -1297,6 +1362,9 @@ function navigate(page) {
   lastPage = currentPage;
   currentPage = page;
   renderPage(page);
+  if (window.innerWidth <= 768) {
+  document.querySelector('.sidebar').classList.remove('open');
+}
 }
 
 function renderPage(page) {
